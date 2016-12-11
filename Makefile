@@ -1,11 +1,13 @@
 # GMS Makefile
-# This file depends on gcc. You must have gcc installed and available in your
-# command line.
+# This file depends on gcc.
 
-TARGET = bin/gms
-
-# PREFIX : Change this to install the program wherever you want.
-PREFIX = /usr/local 
+PREFIX   	:= /usr/local 		# PREFIX : Change this to install the program wherever you want.
+CC    	   	:= g++			# CC : C++ Compiler.
+CFLAGS    	:= -g -std=c++11 	# CFLAGS : C++ Compiler flags.
+INCLUDES	:= -I./inc/		# INCLUDES : Directory where to look for files.
+MKDIR		:= mkdir		# MKDIR : Make Directory command.
+RM 		:= rm 			# RM : Remove Directory command.
+TARGET		:= bin/gms		# TARGET : The 'gms' program.
 
 # File to compile
 OBJS = src/Bundle.o src/DllLoader.o src/Interpreter.o src/main.o src/Node.o \
@@ -19,16 +21,17 @@ REBUILDABLES = $(OBJS) $(TARGET)
 all: $(TARGET) 
    
 $(TARGET): $(OBJS)
-	mkdir bin
-	g++ -I./inc/ -std=c++11 -g -o $@ $^
+	echo Making $(TARGET).
+	$(MKDIR) bin
+	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $^
 
 %.o: %.cpp
-	g++ -I./inc/ -std=c++11 -g -o $@ -c $<
+	$(CC) $(CFLAGS) $(INCLUDES) -o $@ -c $<
 
 # Clean rule.
 clean:
-	rm -f $(REBUILDABLES)
-	rm -d bin
+	$(RM) -f $(REBUILDABLES)
+	$(RM) -d bin
 
 install: $(TARGET)
 	install -m 0755 $(TARGET) $(PREFIX)/bin
